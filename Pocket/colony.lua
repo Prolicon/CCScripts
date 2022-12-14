@@ -2,10 +2,12 @@ HCHANNEL = 150
 RCHANNEL = 151
 
 modem = peripheral.find("modem")
-assert(not modem, "Modem not attached")
-assert(not modem.isWireless, "Modem is not wireless")
+assert(modem, "Modem not attached")
+assert(modem.isWireless, "Modem is not wireless")
 
 modem.open(RCHANNEL)
+
+term.setCursorBlink(false)
 
 local ARROWRIGHT = string.char(16)
 local ARROWLEFT = string.char(17)
@@ -16,7 +18,7 @@ function getBuilderHuts(position)
     local _, _, _, _, data = os.pullEvent("modem_message")
     local builders = {}
     for _, building in ipairs(data) do
-        if building.type == "builder"
+        if building.type == "builder" then
             local builder = {}
             builder.name = building.citizens[1].name
             builder.x = building.location.x
@@ -35,17 +37,20 @@ function getBuilderResources(position)
     return data
 end
 
--- 10, 11 > < respectively
 function drawBuilder(y, name, status, selected)
     y = y*3-1
     local pre = selected and ARROWRIGHT or " "
     local post = selected and ARROWLEFT or " "
     term.setBackgroundColor(selected and colors.lime or colors.green)
     term.setTextColor(colors.gray)
-    setCursorPos(2,y)
-    write(string.format(pre.." %-21s"..post, name))
-    setCursorPos(2,y+1)
-    write(string.format(pre.." %21s"..post, "STATUS"))
+    term.setCursorPos(2,y)
+    term.write(string.format(pre.." %-21s"..post, name))
+    term.setCursorPos(2,y+1)
+    term.write(string.format(pre.."%21s "..post, "STATUS"))
 end
 
-width, height = term.getSize()
+drawBuilder(1, "Bobert B. Brown", "SUPPLY", false)
+drawBuilder(2, "Nib G. Gur", "IDLE", true)
+drawBuilder(3, "Octavia C. Cutter", "GOOD", false)
+
+os.pullEvent("char")

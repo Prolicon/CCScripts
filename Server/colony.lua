@@ -1,12 +1,12 @@
 CHANNEL = 150
 
 modem = peripheral.find("modem")
-assert(not modem, "Modem not attached")
-assert(not modem.isWireless, "Modem is not wireless")
+assert(modem, "Modem not attached")
+assert(modem.isWireless, "Modem is not wireless")
 
 colony = peripheral.find("colonyIntegrator")
-assert(not colony, "Colony manager not attached")
-assert(not colony.isInColony(), "Colony is not found")
+assert(colony, "Colony manager not attached")
+assert(colony.isInColony(), "Colony is not found")
 
 modem.open(CHANNEL)
 
