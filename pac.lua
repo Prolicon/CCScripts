@@ -8,9 +8,11 @@ colony = "programs/colony.lua";
 
 args = { ... }
 
-for _, arg in ipairs(args) then
+for _, arg in ipairs(args) do
     local package = packages[arg]
     if package then
-        shell.run("wget " .. src .. package .. " " .. arg .. ".lua")
+        local filepath = arg .. ".lua"
+        if fs.exists(filepath) then fs.delete(filepath) end
+        shell.run("wget " .. src .. package .. " " .. filepath)
     end
 end
